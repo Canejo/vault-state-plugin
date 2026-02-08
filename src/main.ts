@@ -24,7 +24,6 @@ export default class VaultStatePlugin extends Plugin {
       callback: () => this.saveSnapshot()
     });
 
-    // snapshot automático ao fechar
     this.registerEvent(
       this.app.workspace.on("quit", () => {
         this.saveSnapshot();
@@ -33,8 +32,11 @@ export default class VaultStatePlugin extends Plugin {
   }
 
   async saveSnapshot() {
+    console.log("📸 Iniciando snapshot do vault");
     const vault = this.app.vault;
     const files = vault.getFiles();
+
+    console.log(`📂 Total de arquivos encontrados: ${files.length}`);
 
     const snapshot: VaultSnapshot = {
       createdAt: new Date().toISOString(),
@@ -43,6 +45,7 @@ export default class VaultStatePlugin extends Plugin {
     };
 
     for (const file of files) {
+      console.log("📄 Processando:", file.path);
       const content = await vault.read(file);
       snapshot.files.push({
         path: file.path,
@@ -52,12 +55,14 @@ export default class VaultStatePlugin extends Plugin {
         hash: this.hashContent(content)
       });
     }
+    console.log("🧠 Snapshot montado");
 
     const folder = ".system/vault-snapshots";
     const fileName = `snapshot-${snapshot.createdAt.slice(0, 10)}.json`;
     const fullPath = normalizePath(`${folder}/${fileName}`);
 
     if (!vault.getAbstractFileByPath(folder)) {
+      console.log("📁 Criando pasta:", folder);
       await vault.createFolder(folder);
     }
 
