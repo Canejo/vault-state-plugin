@@ -1,0 +1,9 @@
+{
+  "id": "vault-state-snapshot",
+  "name": "Vault State Snapshot",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Salva o estado completo do vault em snapshot JSON",
+  "author": "Você",
+  "isDesktopOnly": true
+}
