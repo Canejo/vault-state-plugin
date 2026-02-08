@@ -20,7 +20,7 @@ export default class VaultStatePlugin extends Plugin {
   async onload() {
     this.addCommand({
       id: "save-vault-state",
-      name: "Salvar snapshot do vault",
+      name: "Save vault snapshot",
       callback: () => this.saveSnapshot()
     });
 
@@ -62,7 +62,7 @@ export default class VaultStatePlugin extends Plugin {
     }
 
     await vault.create(fullPath, JSON.stringify(snapshot, null, 2));
-    console.log("📸 Snapshot do vault salvo:", fullPath);
+    console.log("📸 Snapshot of the saved vault:", fullPath);
   }
 
   hashContent(content: string): string {
