@@ -1,0 +1,32 @@
+{
+  "name": "vault-state-plugin",
+  "version": "0.0.2",
+  "description": "A plugin that saves the complete state of the vault as a JSON snapshot.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "rollup --config rollup.config.dev.mjs -w",
+    "build": "rollup --config rollup.config.build.mjs"
+  },
+  "keywords": [],
+  "author": "Canejo",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.5",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^24.0.3",
+    "@types/sprintf-js": "^1.1.4",
+    "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
+    "rollup": "^4.44.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "d3": "^7.9.0",
+    "d3-interpolate": "^3.0.1",
+    "jsep": "^1.4.0",
+    "sprintf-js": "^1.1.3"
+  }
+}
