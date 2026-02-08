@@ -1,0 +1,15 @@
+# Intellij
+*.iml
+.idea
+
+# npm
+node_modules
+
+# build
+main.js
+*.js.map
+examples/*.js
+*.zip
+
+# .obsidian
+.obsidian
