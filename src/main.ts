@@ -33,6 +33,10 @@ export default class VaultStatePlugin extends Plugin {
 
   async saveSnapshot() {
     console.log("📸 Iniciando snapshot do vault");
+    const TEXT_EXTENSIONS = [
+      "md", "txt", "csv", "json", "js", "ts", "css", "html", "yaml", "yml"
+    ];
+
     const vault = this.app.vault;
     const files = vault.getFiles();
 
@@ -45,14 +49,25 @@ export default class VaultStatePlugin extends Plugin {
     };
 
     for (const file of files) {
-      console.log("📄 Processando:", file.path);
-      const content = await vault.read(file);
+      const isText = TEXT_EXTENSIONS.includes(file.extension);
+
+      console.log(`📄 ${file.path} (${isText ? "texto" : "binário"})`);
+      let hash = null;
+      if (isText) {
+        try {
+          const content = await vault.read(file);
+          hash = this.hashContent(content);
+        } catch (err) {
+          console.warn("⚠️ Falha ao ler arquivo texto:", file.path);
+        }
+      }
+
       snapshot.files.push({
         path: file.path,
         name: file.name,
         mtime: file.stat.mtime,
         size: file.stat.size,
-        hash: this.hashContent(content)
+        hash
       });
     }
     console.log("🧠 Snapshot montado");

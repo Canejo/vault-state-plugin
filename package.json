@@ -1,6 +1,6 @@
 {
   "name": "vault-state-plugin",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A plugin that saves the complete state of the vault as a JSON snapshot.",
   "main": "main.js",
   "scripts": {
