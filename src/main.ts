@@ -1,4 +1,4 @@
-import { App, Plugin, TFile, normalizePath } from "obsidian";
+import { App, Plugin, TFile, normalizePath, TFolder } from "obsidian";
 import { createHash } from "crypto";
 
 interface FileState {
@@ -32,15 +32,12 @@ export default class VaultStatePlugin extends Plugin {
   }
 
   async saveSnapshot() {
-    console.log("📸 Iniciando snapshot do vault");
     const TEXT_EXTENSIONS = [
       "md", "txt", "csv", "json", "js", "ts", "css", "html", "yaml", "yml"
     ];
 
     const vault = this.app.vault;
     const files = vault.getFiles();
-
-    console.log(`📂 Total de arquivos encontrados: ${files.length}`);
 
     const snapshot: VaultSnapshot = {
       createdAt: new Date().toISOString(),
@@ -51,7 +48,6 @@ export default class VaultStatePlugin extends Plugin {
     for (const file of files) {
       const isText = TEXT_EXTENSIONS.includes(file.extension);
 
-      console.log(`📄 ${file.path} (${isText ? "texto" : "binário"})`);
       let hash = null;
       if (isText) {
         try {
@@ -70,19 +66,25 @@ export default class VaultStatePlugin extends Plugin {
         hash
       });
     }
-    console.log("🧠 Snapshot montado");
 
     const folder = ".system/vault-snapshots";
     const fileName = `snapshot-${snapshot.createdAt.slice(0, 10)}.json`;
     const fullPath = normalizePath(`${folder}/${fileName}`);
 
-    if (!vault.getAbstractFileByPath(folder)) {
-      console.log("📁 Criando pasta:", folder);
-      await vault.createFolder(folder);
-    }
+    await this.ensureFolder(folder);
 
     await vault.create(fullPath, JSON.stringify(snapshot, null, 2));
-    console.log("📸 Snapshot of the saved vault:", fullPath);
+  }
+
+  async ensureFolder(path: string) {
+    const existing = this.app.vault.getAbstractFileByPath(path);
+
+    if (existing instanceof TFolder) return;
+
+    try {
+      await this.app.vault.createFolder(path);
+    } catch (err) {
+    }
   }
 
   hashContent(content: string): string {
