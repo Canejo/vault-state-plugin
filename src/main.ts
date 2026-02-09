@@ -91,7 +91,16 @@ export default class VaultStatePlugin extends Plugin {
     }
   }
 
+  normalizeContent(content: string): string {
+    return content
+      .replace(/\r\n/g, "\n")   // normaliza line endings
+      .replace(/\uFEFF/g, "")   // remove BOM
+      .normalize("NFC")         // unicode consistente
+      .trimEnd();               // remove newline final
+  }
+
   hashContent(content: string): string {
-    return createHash("sha1").update(content).digest("hex");
+    const normalized = this.normalizeContent(content);
+    return createHash("sha1").update(normalized).digest("hex")
   }
 }
