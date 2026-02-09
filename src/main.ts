@@ -68,7 +68,11 @@ export default class VaultStatePlugin extends Plugin {
     }
 
     const folder = "00 Metadata/State/Vault Snapshots";
-    const fileName = `snapshot-${snapshot.createdAt.slice(0, 19)}.json`;
+    const fileName =
+      `snapshot-${snapshot.createdAt
+        .slice(0, 16)
+        .replace("T", "_")
+        .replace(/:/g, "-")}.json`;
     const fullPath = normalizePath(`${folder}/${fileName}`);
 
     await this.ensureFolder(folder);
