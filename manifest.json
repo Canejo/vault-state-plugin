@@ -1,8 +1,8 @@
 {
   "id": "vault-state-snapshot",
   "name": "Vault State Snapshot",
-  "version": "0.0.11",
-  "minAppVersion": "0.0.11",
+  "version": "0.0.12",
+  "minAppVersion": "0.0.12",
   "description": "Saves the complete vault state as a JSON snapshot.",
   "author": "Canejo",
   "isDesktopOnly": false
