@@ -1,4 +1,4 @@
-import { App, Plugin, TFile, normalizePath, TFolder } from "obsidian";
+import { App, Plugin, TFile, normalizePath, TFolder, Notice } from "obsidian";
 import { createHash } from "crypto";
 
 interface FileState {
@@ -77,7 +77,12 @@ export default class VaultStatePlugin extends Plugin {
 
     await this.ensureFolder(folder);
 
-    await vault.create(fullPath, JSON.stringify(snapshot, null, 2));
+    await vault.create(fullPath, JSON.stringify(snapshot));
+
+    new Notice(
+      `Snapshot created at ${snapshot.createdAt}\nTotal files: ${snapshot.fileCount}`,
+      6000
+    );
   }
 
   async ensureFolder(path: string) {
