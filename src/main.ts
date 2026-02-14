@@ -1,6 +1,8 @@
 import { App, Plugin, TFile, normalizePath, TFolder, Notice } from "obsidian";
 import { createHash } from "crypto";
 
+import VaultStateSettingTab from "./SettingTab";
+
 interface FileState {
   path: string;
   name: string;
@@ -15,9 +17,24 @@ interface VaultSnapshot {
   files: FileState[];
 }
 
+interface VaultStateSettings {
+  snapshotFolder: string;
+}
+
+const DEFAULT_SETTINGS: VaultStateSettings = {
+  snapshotFolder: ""
+};
+
 export default class VaultStatePlugin extends Plugin {
+  settings: VaultStateSettings;
 
   async onload() {
+
+    await this.loadSettings();
+
+    this.addSettingTab(new VaultStateSettingTab(this.app, this));
+
+
     this.addCommand({
       id: "save-vault-state",
       name: "Save vault snapshot",
@@ -67,7 +84,13 @@ export default class VaultStatePlugin extends Plugin {
       });
     }
 
-    const folder = "00 Metadata/State/Vault Snapshots";
+    const folder = this.settings.snapshotFolder;
+
+    if (!folder || folder.length < 2) {
+      new Notice("Invalid folder path.");
+      return;
+    }
+
     const fileName =
       `snapshot-${snapshot.createdAt
         .slice(0, 16)
@@ -107,5 +130,13 @@ export default class VaultStatePlugin extends Plugin {
   hashContent(content: string): string {
     const normalized = this.normalizeContent(content);
     return createHash("sha1").update(normalized).digest("hex")
+  }
+
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
   }
 }
