@@ -25,5 +25,18 @@ export default class VaultStateSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
+
+    new Setting(containerEl)
+        .setName("Ignored Folders")
+        .setDesc("Comma-separated list with wildcards (*)")
+        .addTextArea(text =>
+            text
+            .setPlaceholder("Templates/*, Attachments, Daily/*")
+            .setValue(this.plugin.settings.ignoredFolders)
+            .onChange(async (value) => {
+                this.plugin.settings.ignoredFolders = value;
+                await this.plugin.saveSettings();
+            })
+        );
   }
 }
